@@ -1,7 +1,7 @@
 <?php
 require_once "../Model/model.php";
 
-
+session_start();
 
 
 if(isset($_POST['submit']))
@@ -74,7 +74,9 @@ if(isset($_POST['submit']))
         endforeach;
         if($password==$passwordFromDB)
         {
-          echo "Login Successful";
+          $_SESSION['username']=$username;
+
+          header('Location: ../View/dashboardStudentView.php');
         }
         else {
           echo "Incorrect Password";

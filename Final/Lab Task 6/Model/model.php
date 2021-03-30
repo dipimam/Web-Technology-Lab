@@ -15,17 +15,16 @@ function showAllProducts(){
     return $rows;
 }
 
-function showProduct($id){
+function showStudent($username){
 	$conn = db_conn();
-	$selectQuery = "SELECT * FROM `products` where ID = ?";
+	$selectQuery = "SELECT * FROM `studentsinfo` where USERNAME = '$username'";
 
     try {
-        $stmt = $conn->prepare($selectQuery);
-        $stmt->execute([$id]);
+      $stmt = $conn->query($selectQuery);
     } catch (PDOException $e) {
         echo $e->getMessage();
     }
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     return $row;
 }
@@ -69,14 +68,27 @@ VALUES (:name, :email, :birth, :username, :password, :gender)";
 }
 
 
-function updateProduct($id, $data){
+function updateStudent($username, $data){
     $conn = db_conn();
-    $selectQuery = "UPDATE products set NAME = ?, BUYING = ?, SELLING = ? where ID = ?";
+    $selectQuery = "UPDATE studentsinfo set NAME = ?, EMAIL = ?, BIRTH = ? where USERNAME = '$username'";
     try{
         $stmt = $conn->prepare($selectQuery);
         $stmt->execute([
-        	$data['name'], $data['buyingPrice'], $data['sellingPrice'], $id
+        	$data['name'], $data['email'], $data['birth']
         ]);
+    }catch(PDOException $e){
+        echo $e->getMessage();
+    }
+
+    $conn = null;
+    return true;
+}
+function updatePasswordStudent($username, $password){
+    $conn = db_conn();
+    $selectQuery = "UPDATE studentsinfo set PASSWORD = '$password' where USERNAME = '$username'";
+    try{
+          $stmt = $conn->query($selectQuery);
+      
     }catch(PDOException $e){
         echo $e->getMessage();
     }
